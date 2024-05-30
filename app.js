@@ -14,10 +14,24 @@ app.use(express.json());
 
 app.use('/api/courses', coursesRoute)
 
+
+// Global error handler
+app.use((error, req, res, next) => {
+    let statusCode = error.statusCode || 500;
+    let statusText = error.statusText || httpStatusText.FAIL;
+    let message = error.message || 'Internal Server Error';
+
+    res.status(statusCode).json({
+        status: statusText,
+        message: message,
+    });
+});
+//global middleware for handle not found routes
 app.all('*', (req, res, next) => {
-    return res.status(404).json({ status: httpStatusText.ERROR, message: 'this resource is not available' })
+    return res.status(404).json({ status: httpStatusText.ERROR, message: 'this resource is not available', code: statusCode })
 
 })
+
 
 //connect to db and run server
 mongoose.connect(process.env.DB_URI).then(() => {
