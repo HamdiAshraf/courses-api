@@ -5,7 +5,7 @@ const Course = require('../models/Course')
 const httpStatusText = require('../utils/httpStatusText')
 
 exports.getAllCourses = async (req, res) => {
-    const courses = await Course.find({})
+    const courses = await Course.find({}, { "__v": false })
     res.status(200).json({ status: httpStatusText.SUCCESS, data: { courses } });
 }
 
