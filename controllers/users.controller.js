@@ -1,10 +1,12 @@
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
-
+const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const appError = require('../utils/appError')
 const asyncWrapper = require('../middlewares/asyncWrapper')
 const httpStatusText = require('../utils/httpStatusText')
+const { generateToken } = require('../utils/generateToken')
+
 
 exports.getAllUsers = asyncWrapper(async (req, res) => {
     const limit = req.query.limit || 10;
@@ -35,7 +37,8 @@ exports.register = asyncWrapper(async (req, res, next) => {
         email,
         password: hashedPassword
     })
-
+    const token = await generateToken({ email: newUser.email, id: newUser._id })
+    newUser.token = token;
     await newUser.save();
 
     return res.status(200).json({ status: httpStatusText.SUCCESS, data: { newUser } })
@@ -62,10 +65,11 @@ exports.login = asyncWrapper(async (req, res, next) => {
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) return next(appError.create('incorrect password', 400, httpStatusText.FAIL));
 
+    const token = await generateToken({ email: user.email, id: user._id })
 
 
 
-    return res.status(200).json({ status: httpStatusText.SUCCESS, data: 'logged in successfully' })
+    return res.status(200).json({ status: httpStatusText.SUCCESS, data: token })
 
 
 
