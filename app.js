@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose')
 const cors = require('cors')
 const coursesRoute = require('./routes/courses.route')
-
+const usersRoute = require('./routes/users.route')
 const httpStatusText = require('./utils/httpStatusText')
 
 const app = express();
@@ -13,6 +13,8 @@ app.use(cors())
 app.use(express.json());
 
 app.use('/api/courses', coursesRoute)
+app.use('/api/users', usersRoute)
+
 
 
 // Global error handler
