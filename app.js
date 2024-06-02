@@ -32,7 +32,7 @@ app.use((error, req, res, next) => {
 });
 //global middleware for handle not found routes
 app.all('*', (req, res, next) => {
-    return res.status(404).json({ status: httpStatusText.ERROR, message: 'this resource is not available', code: statusCode })
+    return res.status(404).json({ status: httpStatusText.ERROR, message: 'this resource is not available', code: 404 })
 
 })
 
