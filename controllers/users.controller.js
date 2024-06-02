@@ -20,7 +20,7 @@ exports.getAllUsers = asyncWrapper(async (req, res) => {
 
 
 exports.register = asyncWrapper(async (req, res, next) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(appError.create(errors.array().map(err => err.msg).join(', '), 400, httpStatusText.FAIL));
@@ -35,9 +35,10 @@ exports.register = asyncWrapper(async (req, res, next) => {
         firstName,
         lastName,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        role
     })
-    const token = await generateToken({ email: newUser.email, id: newUser._id })
+    const token = await generateToken({ email: newUser.email, id: newUser._id, role: newUser.role })
     newUser.token = token;
     await newUser.save();
 
@@ -65,11 +66,11 @@ exports.login = asyncWrapper(async (req, res, next) => {
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) return next(appError.create('incorrect password', 400, httpStatusText.FAIL));
 
-    const token = await generateToken({ email: user.email, id: user._id })
+    const token = await generateToken({ email: user.email, id: user._id, role: user.role })
 
 
 
-    return res.status(200).json({ status: httpStatusText.SUCCESS, data: token })
+    return res.status(200).json({ status: httpStatusText.SUCCESS, data: { token: token } })
 
 
 
