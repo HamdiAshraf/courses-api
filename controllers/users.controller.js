@@ -20,7 +20,8 @@ exports.getAllUsers = asyncWrapper(async (req, res) => {
 
 
 exports.register = asyncWrapper(async (req, res, next) => {
-    const { firstName, lastName, email, password, role } = req.body;
+    
+    const { firstName, lastName, email, password, role, avatar } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(appError.create(errors.array().map(err => err.msg).join(', '), 400, httpStatusText.FAIL));
@@ -36,7 +37,8 @@ exports.register = asyncWrapper(async (req, res, next) => {
         lastName,
         email,
         password: hashedPassword,
-        role
+        role,
+        avatar: req.file.filename
     })
     const token = await generateToken({ email: newUser.email, id: newUser._id, role: newUser.role })
     newUser.token = token;

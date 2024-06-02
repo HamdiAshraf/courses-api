@@ -5,9 +5,11 @@ const cors = require('cors')
 const coursesRoute = require('./routes/courses.route')
 const usersRoute = require('./routes/users.route')
 const httpStatusText = require('./utils/httpStatusText')
-
+const path = require('path')
 const app = express();
 const PORT = process.env.PORT || 3000
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 app.use(cors())
 app.use(express.json());
