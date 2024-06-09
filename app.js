@@ -9,8 +9,7 @@ const path = require('path')
 // const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-const app = require('./server')
-const PORT = process.env.PORT || 3000
+const app = require('./server')const PORT = process.env.PORT || 3000
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
