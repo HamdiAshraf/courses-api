@@ -7,6 +7,9 @@ const usersRoute = require('./routes/users.route')
 const httpStatusText = require('./utils/httpStatusText')
 const path = require('path')
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 const PORT = process.env.PORT || 3000
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
@@ -17,7 +20,7 @@ app.use(express.json());
 app.use('/api/courses', coursesRoute)
 app.use('/api/users', usersRoute)
 
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Global error handler
 app.use((error, req, res, next) => {

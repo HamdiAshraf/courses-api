@@ -1,0 +1,387 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Courses API",
+    "description": "API for managing courses",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Courses",
+      "description": "API endpoints for courses"
+    },
+    {
+      "name": "Users",
+      "description": "API endpoints for users"
+    }
+  ],
+  "schemes": ["http"],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter your bearer token in the format **Bearer valid-token**"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/courses": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "Get all courses",
+        "description": "Endpoint to retrieve all courses from the system.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/course"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Courses"],
+        "summary": "Add a new course",
+        "description": "Endpoint to add a new course to the system.",
+        "parameters": [
+          {
+            "name": "course",
+            "in": "body",
+            "description": "The course to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/courseRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/course"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/courses/{id}": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "Get a course by ID",
+        "description": "Endpoint to retrieve a course by ID from the system.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the course to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/course"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/notFoundResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Courses"],
+        "summary": "Update a course",
+        "description": "Endpoint to update a course in the system.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the course to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "course",
+            "in": "body",
+            "description": "The updated course",
+            "schema": {
+              "$ref": "#/definitions/courseRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/course"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/notFoundResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Courses"],
+        "summary": "Delete a course",
+        "description": "Endpoint to delete a course from the system.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the course to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/notFoundResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Register a new user",
+        "description": "Endpoint to register a new user in the system.",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "The user to register",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login a user",
+        "description": "Endpoint to log in a user.",
+        "parameters": [
+          {
+            "name": "credentials",
+            "in": "body",
+            "description": "The user's credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/loginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU4NDkxMjJiZGFlZmVlMzlkYWY1ZGIiLCJpYXQiOjE2MzE5MjM4OTR9.uM5fOPJkATf0y8YIi5C8UXiZhmnFzAdwd0aUHxX0Ea4"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/unauthorizedResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "course": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The unique identifier of the course"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the course"
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the course"
+        }
+      },
+      "required": ["title", "price"]
+    },
+    "courseRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the course"
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the course"
+        }
+      },
+      "required": ["title", "price"]
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The unique identifier of the user"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["ADMIN", "MANAGER", "USER"],
+          "default": "USER"
+        },
+        "avatar": {
+          "type": "string",
+          "default": "uploads/profile.png"
+        }
+      },
+      "required": ["firstName", "lastName", "email", "password"]
+    },
+    "userRequest": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["firstName", "lastName", "email", "password"]
+    },
+    "loginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "password"]
+    },
+    "notFoundResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "unauthorizedResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "message": {
+          "type": "string",
+          "example": "Unauthorized"
+        }
+      }
+    }
+  }
+}
